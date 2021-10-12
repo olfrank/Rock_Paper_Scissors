@@ -1,0 +1,109 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/OllieFrancis/Documents/Ethereum/RPS/contracts/RPS.sol": {
+      "lastModificationDate": 1633966411480,
+      "contentHash": "7f1d20eeb3677cee868c68f925e0029e",
+      "sourceName": "contracts/RPS.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "RPS"
+      ]
+    },
+    "/Users/OllieFrancis/Documents/Ethereum/RPS/contracts/RPSToken.sol": {
+      "lastModificationDate": 1633950478239,
+      "contentHash": "3a41c2cda1473c6819cffe1e46f12828",
+      "sourceName": "contracts/RPSToken.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.9"
+      ],
+      "artifacts": [
+        "RPSToken"
+      ]
+    },
+    "/Users/OllieFrancis/Documents/Ethereum/RPS/node_modules/hardhat/console.sol": {
+      "lastModificationDate": 1633954457678,
+      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.9",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    }
+  }
+}
