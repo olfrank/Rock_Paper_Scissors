@@ -1,9 +1,11 @@
 pragma solidity ^0.8.9;
 
 import 'hardhat/console.sol';
+import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 
 contract RPS{
-    
+    using SafeMath for uint256;
     // 0x5fe7f977e71dba2ea1a68e21057beebb9be2ac30c6410aa38d4f3fbe41dcffd2    Rock
     // 0xf2ee15ea639b73fa3db9b34a245bdfa015c260c598b211bf05a1ecc4b3e3b4f2    Paper 
     // 0x69c322e3248a5dfc29d73c5b0553b0185a35cd5bb6386747517ef7e53b15e287    Scissors
@@ -32,23 +34,35 @@ contract RPS{
      mapping( address => uint8 )addressEntered;
      mapping( address => uint8 )enteredMove;
 
+     mapping( address => uint256 )balances;
+
      event NewGame(address _player1, address _player2, uint256 _wager, bytes32 _encrMovePlayer1, bytes32 _encrMovePlayer2);
      event Finished(address winner, uint256 winnings);
 
+    function deposit() payable external{
+        balances[msg.sender] = balances[msg.sender].add(msg.value);
+    }
+    function withdraw( uint256 _amount) external{
+        require(_amount >= balances[msg.sender], "the amount exceeds your balance");
+        balances[msg.sender] = balances[msg.sender].sub(_amount);
+    }
     
     
-    function enroll()external payable { //validBet isJoinable
+    function enroll(uint256 _amount)external payable { //validBet isJoinable
         require(player1 == address(0) || player2 == address(0), "Sorry game is full");
-        require(msg.value >= wager, "you must enter a value >= player1's bet");
+        require(_amount >= wager, "you must enter a value >= player1's bet");
 
         if(player1 == address(0)){
             player1 = payable(msg.sender);
-            wager = msg.value;
+            wager = _amount;
+            balances[player1] = balances[player1].sub(wager);
+            
             console.log("%s is player1", msg.sender);
             console.log("%s is player1's wager", msg.value);
             
         }else{
             player2 = payable(msg.sender);
+            balances[player2] = balances[player2] .sub(_amount);
             console.log("%s is player2", msg.sender);
             console.log("%s is player2's wager", msg.value);
         }
@@ -59,8 +73,6 @@ contract RPS{
 
     function play(bytes32 encrMove) public returns(bool){ //madeMove
 
-        
-
         require(player1 != address(0) && player2 != address(0), "both players must enroll to start the game");
 
         require(encrMove == bytes32(keccak256(abi.encodePacked(Moves.Rock))) || 
@@ -69,7 +81,7 @@ contract RPS{
 
         require(enteredMove[msg.sender] <= 1,  "you have already entered this function");
 
-        console.log("%s is the encripted move made by %s = msg.sender", encrMove, msg.sender);
+        //console.log("%s is the encripted move made by %s = msg.sender", encrMove, msg.sender);
 
         enteredMove[msg.sender] += entered; // cannot re-enter/change move 
 
@@ -153,20 +165,25 @@ contract RPS{
         
         (bool success, ) = _player1.call{value: _wager}(""); //.call is more gas efficient and upgradable as gas prices may change in future 
         require(success);
+        balances[_player1] = balances[_player1].add(_wager);
 
         (bool success2, ) = _player2.call{value: address(this).balance}(""); // contract balance should be cleared after every game so no fund roll over 
         require(success2);
-
+        balances[_player1] = balances[_player1].add(address(this).balance);
 
         // _player1.transfer(_wager);
         // _player2.transfer(address(this).balance);
     }
     
-    function pay(address payable _winner) internal {
+    function pay(address payable _winner) internal returns(address){
         resetGame(); 
+        uint _amount = address(this).balance;
 
-        (bool success, ) = _winner.call{value: address(this).balance}("");
+        (bool success, ) = _winner.call{value: _amount}("");
         require(success);
+        balances[_winner] = balances[_winner].add(_amount);
+
+        return _winner;
 
         // _winner.transfer(address(this).balance);
     }
@@ -199,6 +216,10 @@ contract RPS{
 
     function getWager() public view returns(uint256){
         return wager;
+    }
+
+    function getBalances(address _address) public view returns(uint256){
+        return balances[_address];
     }
 
 

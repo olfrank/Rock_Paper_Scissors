@@ -38,12 +38,43 @@ describe ("RPS contract", () => {
 
     })
 
-    describe("play", async()=>{
-        const hashedRock = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(1));
-        const hashedPaper = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(2));
-        const hashedScissors = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(3));
+    describe("evaluate", async()=>{
 
-        it("should ")
+        await rps.connect(addr1).enroll({ value: 50  });
+        await rps.connect(addr2).enroll({ value: 50  });
+        const hashedRock = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("1"));
+        const hashedPaper = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("2"));
+        const hashedScissors = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("3"));
+
+        it("player1 should win", async () =>{
+            const move1 = await rps.connect(addr1).play(hashedPaper);
+            const move2 = await rps.connect(addr2).play(hashedRock);
+            await rps.evaluate();
+
+            expect(await rps.connect(addr1).getContractBalance()).to.equal( "0" );
+            expect()
+
+        })
+
+        it("player2 should win", async () =>{
+            const move1 = await rps.connect(addr1).play(hashedPaper);
+            const move2 = await rps.connect(addr2).play(hashedScissors);
+            await rps.evaluate();
+
+            expect(await rps.connect(addr1).getContractBalance()).to.equal( "0" );
+            expect()
+
+        })
+
+        it("player1 should win", async () =>{
+            const move1 = await rps.connect(addr1).play(hashedRock);
+            const move2 = await rps.connect(addr2).play(hashedScissors);
+            await rps.evaluate();
+
+            expect(await rps.connect(addr1).getContractBalance()).to.equal( "0" );
+            expect()
+
+        })
     })
 
     describe("evaluate", async()=>{
